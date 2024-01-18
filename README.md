@@ -1,5 +1,6 @@
 Guia de Instalação do NetBox no Ubuntu 22.04 LTS
 
+
 Antes de começar, é altamente recomendável realizar um snapshot da máquina para facilitar possíveis rollbacks após atualizações.
 
 Requisitos Mínimos:
@@ -10,66 +11,89 @@ PostgreSQL: >= 10
 Redis: >= 4.0
 Atualizar a máquina:
 
-apt update - atualizar softwares da maquina
+# atualizar softwares da maquina
+apt update
 
-apt install -y postgresql - instalar o postgres
-psql -V - verificar a versão do postgres
+# instalar o postgres
+apt install -y postgresql
+# verificar a versão do postgres
+psql -V
 
-sudo -u postgres psql - criação da data base
+# criação da data base
+sudo -u postgres psql
 CREATE DATABASE netbox;
 CREATE USER netbox WITH PASSWORD 'J5brHrAXFLQSif0K';
 ALTER DATABASE netbox OWNER TO netbox;
--- the next two commands are needed on PostgreSQL 15 and later
 \connect netbox;
 GRANT CREATE ON SCHEMA public TO netbox;
 
-apt install -y redis-server - instalar o redis
-redis-cli ping - tem que retornar como "PONG" para ter certeza que serviço esta ok
+# instalação do Redis
+apt install -y redis-server
+# tem que retornar como "PONG" para ter certeza que serviço esta ok
+redis-cli ping
 
-sudo apt install -y python3 python3-pip python3-venv python3-dev build-essential libxml2-dev libxslt1-dev libffi-dev libpq-dev libssl-dev zlib1g-dev - instalar o python
-pip3 install --upgrade pip - rodar após a instalação do python com seus pacotes
+# instalar o python
+sudo apt install -y python3 python3-pip python3-venv python3-dev build-essential libxml2-dev libxslt1-dev libffi-dev libpq-dev libssl-dev zlib1g-dev
+# rodar após a instalação do python com seus pacotes
+pip3 install --upgrade pip
 
+# Obs: instalar a versão mais atualizada conforme site da netbox, pois pode mudar a versão com o tempo
 wget https://github.com/netbox-community/netbox/archive/refs/tags/vx.x.x.tar.gz
 tar -xzf vx.x.x.tar.gz -C /opt
 ln -s /opt/netbox
-ls -l /opt | grep netbox - Obs: instalar a versão conforme o site da netbox pois pode atualizar
+ls -l /opt | grep netbox
 
+# criar usuário netbox
 adduser --system -group netbox
-chown --recursive netbox /opt/netbox/netbox/media/ - criar usuário netbox
+chown --recursive netbox /opt/netbox/netbox/media/
 
+# copiar pasta do arquivo principal
 cd /opt/netbox/netbox/netbox/
-cp configuration_example.py configuration.py - copiar pasta do arquivo principal
+cp configuration_example.py configuration.py
 
-entrar dentro do arquivo configuration.py em "ALLOWED_HOSTS =" informar o IP, nome da VM (para testes '*')
+# informar o IP ou nome da VM (para testes pode inserir '*')
+entrar dentro do arquivo configuration.py em "ALLOWED_HOSTS ="
 
-python3 ../generate_secret_key.py - gerar chave nesse comando para colar detro do arquivo configuration.py
+# gerar chave nesse comando para colar detro do arquivo configuration.py
+python3 ../generate_secret_key.py
 
-echo napalm >> /opt/netbox/local_requirements.txt - cria o ambiente virtual do python
+# cria o ambiente virtual do python
+echo napalm >> /opt/netbox/local_requirements.txt
 
+# script para fazer o upgrade
 cd /opt/netbox
-./upgrade.sh - script para fazer o upgrade
+./upgrade.sh
 
-source /opt/netbox/venv/bin/activate - ambiente virtual do python
+# ambiente virtual do python
+source /opt/netbox/venv/bin/activate
 
+# criar usuario para netbox
 cd /opt/netbox/netbox
-python3 manage.py createsuperuser - criar usuario admin para netbox
+python3 manage.py createsuperuser
 
-python3 manage.py runserver 0.0.0.0:8000 --insecure - verificar se esta funcional dentro do ambiente python (informar o ip da maquina seguido da porta do firewall)
-verificar se a porta 8000 ou qualquer outra que informar esta habilitada no firewall
+# verificar se esta funcional dentro do ambiente python (informar o ip da maquina seguido da porta do firewall)
+python3 manage.py runserver 0.0.0.0:8000 --insecure
+# verificar se a porta 8000 ou qualquer outra que informar esta habilitada no firewall
 
-comando "deactivate" sai do interface python
+# comando "deactivate" sai do interface python
 
+# arquivos de serviço do gunicorn
 cp /opt/netbox/contrib/gunicorn.py /opt/netbox/gunicorn.py
-cp -v /opt/netbox/contrib/*.service /etc/systemd/system/ arquivos de serviço do gunicorn
+cp -v /opt/netbox/contrib/*.service /etc/systemd/system/
 
 systemctl daemon-reload
 systemctl start netbox netbox-rq
 systemctl enable netbox netbox-rq
-systemctl status netbox - ativar serviços netbox 
+# ativar serviços netbox
+systemctl status netbox
 
+# instalar servidor web
 apt install -y nginx
-cp /opt/netbox/contrib/nginx.conf /etc/nginx/sites-available/netbox - instalar servidor web
-vi /etc/nginx/sites-available/netbox - entrar dentro do arquivo netbox.conf para informar ip da maquina e caso não tiver certificado comentar a 3 linhas do ssl
-systemctl restart nginx - para subir as configurações alteradas
+cp /opt/netbox/contrib/nginx.conf /etc/nginx/sites-available/netbox
+# entrar dentro do arquivo netbox.conf para informar ip da maquina e caso não tiver certificado comentar a 3 linhas do ssl
+vi /etc/nginx/sites-available/netbox
+# para subir as configurações alteradas
+systemctl restart nginx
+
 
 Com essas instruções, você terá o NetBox instalado e configurado no seu ambiente Ubuntu 22.04 LTS. Certifique-se de ajustar conforme necessário, especialmente versões e caminhos, e acompanhe possíveis atualizações do NetBox e suas dependências.
