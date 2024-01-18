@@ -6,6 +6,7 @@ Antes de começar, é altamente recomendável realizar um snapshot da máquina p
 Requisitos Mínimos:
 
 Memória: 4GB (mínimo)
+VCpu: 1 (1core)
 Python: >= 3.8
 PostgreSQL: >= 10
 Redis: >= 4.0
