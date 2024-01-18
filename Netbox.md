@@ -1,10 +1,8 @@
-Guia de Instalação do NetBox no Ubuntu 22.04 LTS
+# Guia de Instalação do NetBox no Ubuntu 22.04 LTS
 
-
-Antes de começar, é altamente recomendável realizar um snapshot da máquina para facilitar possíveis rollbacks após atualizações.
+# Antes de começar, é altamente recomendável realizar um snapshot da máquina para facilitar possíveis rollbacks após atualizações.
 
 Requisitos Mínimos:
-
 Memória: 4GB (mínimo)
 VCpu: 1 (1core)
 Python: >= 3.8
@@ -95,5 +93,4 @@ vi /etc/nginx/sites-available/netbox
 # para subir as configurações alteradas
 systemctl restart nginx
 
-
-Com essas instruções, você terá o NetBox instalado e configurado no seu ambiente Ubuntu 22.04 LTS. Certifique-se de ajustar conforme necessário, especialmente versões e caminhos, e acompanhe possíveis atualizações do NetBox e suas dependências.
+# Com essas instruções, você terá o NetBox instalado e configurado no seu ambiente Ubuntu 22.04 LTS. Certifique-se de ajustar conforme necessário, especialmente versões e caminhos, e acompanhe possíveis atualizações do NetBox e suas dependências.
