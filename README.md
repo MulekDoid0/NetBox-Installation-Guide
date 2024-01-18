@@ -10,87 +10,72 @@ PostgreSQL: >= 10
 Redis: >= 4.0
 Atualizar a máquina:
 
-sudo apt update
-Instalar PostgreSQL:
+apt update - atualizar softwares da maquina
 
-sudo apt install -y postgresql
-Verificar versão do PostgreSQL:
+apt install -y postgresql - instalar o postgres
 
-psql -V
-Criar database PostgreSQL:
+psql -V - verificar a versão do postgres
 
-sudo -u postgres psql
-Instalar Redis:
+sudo -u postgres psql - criação da data base
+CREATE DATABASE netbox;
+CREATE USER netbox WITH PASSWORD 'J5brHrAXFLQSif0K';
+ALTER DATABASE netbox OWNER TO netbox;
+-- the next two commands are needed on PostgreSQL 15 and later
+\connect netbox;
+GRANT CREATE ON SCHEMA public TO netbox;
 
-sudo apt install -y redis-server
-Verificar status do Redis:
+apt install -y redis-server - instalar o redis
 
-redis-cli ping
-Instalar pacotes essenciais do Python:
+redis-cli ping - tem que retornar como "PONG" para ter certeza que serviço esta ok
 
-sudo apt install -y python3 python3-pip python3-venv python3-dev build-essential libxml2-dev libxslt1-dev libffi-dev libpq-dev libssl-dev zlib1g-dev
-Atualizar o Pip:
+sudo apt install -y python3 python3-pip python3-venv python3-dev build-essential libxml2-dev libxslt1-dev libffi-dev libpq-dev libssl-dev zlib1g-dev - instalar o python
 
-pip3 install --upgrade pip
-Baixar e configurar NetBox:
+pip3 install --upgrade pip - rodar após a instalação do python com seus pacotes
 
-wget https://github.com/netbox-community/netbox/archive/refs/tags/v3.6.7.tar.gz
-tar -xzf v3.6.7.tar.gz -C /opt
+wget https://github.com/netbox-community/netbox/archive/refs/tags/vx.x.x.tar.gz
+tar -xzf vx.x.x.tar.gz -C /opt
 ln -s /opt/netbox
-Criar usuário NetBox:
+ls -l /opt | grep netbox - Obs: instalar a versão conforme o site da netbox pois pode atualizar
 
-sudo adduser --system --group netbox
-sudo chown --recursive netbox /opt/netbox/netbox/media/
-Configurar NetBox:
+adduser --system -group netbox
+chown --recursive netbox /opt/netbox/netbox/media/ - criar usuário netbox
 
 cd /opt/netbox/netbox/netbox/
-cp configuration_example.py configuration.py
-Editar configuration.py:
+cp configuration_example.py configuration.py - copiar pasta do arquivo principal
 
-Em "ALLOWED_HOSTS =", informar o IP ou nome da VM.
-Gerar chave secreta:
+entrar dentro do arquivo configuration.py em "ALLOWED_HOSTS =" informar o IP, nome da VM (para testes '*')
 
-python3 ../generate_secret_key.py
-Instalar ambiente virtual do Python:
+python3 ../generate_secret_key.py - gerar chave nesse comando para colar detro do arquivo configuration.py
 
-echo napalm >> /opt/netbox/local_requirements.txt
-Executar script de upgrade:
+echo napalm >> /opt/netbox/local_requirements.txt - cria o ambiente virtual do python
 
 cd /opt/netbox
-./upgrade.sh
-Ativar ambiente virtual do Python:
+./upgrade.sh - script para fazer o upgrade
 
-source /opt/netbox/venv/bin/activate
-Criar superusuário:
+source /opt/netbox/venv/bin/activate - ambiente virtual do python
 
 cd /opt/netbox/netbox
-python3 manage.py createsuperuser
-Executar servidor de desenvolvimento:
+python3 manage.py createsuperuser - criar usuario admin para netbox
 
-python3 manage.py runserver 0.0.0.0:8000 --insecure
-Configurar firewall:
+python3 manage.py runserver 0.0.0.0:8000 --insecure - verificar se esta funcional dentro do ambiente python (informar o ip da maquina seguido da porta do firewall)
 
-Verificar se a porta 8000 (ou outra especificada) está habilitada.
-Desativar ambiente virtual:
+verificar se a porta 8000 ou qualquer outra que informar esta habilitada no firewall
 
-deactivate
-Configurar Gunicorn e serviços do sistema:
+comando "deactivate" sai do interface python
 
 cp /opt/netbox/contrib/gunicorn.py /opt/netbox/gunicorn.py
-cp -v /opt/netbox/contrib/*.service /etc/systemd/system/
+cp -v /opt/netbox/contrib/*.service /etc/systemd/system/ arquivos de serviço do gunicorn
+
 systemctl daemon-reload
 systemctl start netbox netbox-rq
 systemctl enable netbox netbox-rq
-systemctl status netbox
-Instalar e configurar Nginx:
+systemctl status netbox - ativar serviços netbox 
 
-sudo apt install -y nginx
-cp /opt/netbox/contrib/nginx.conf /etc/nginx/sites-available/netbox
-vi /etc/nginx/sites-available/netbox
-Dentro do arquivo netbox, informar o IP da máquina. Se não houver certificado SSL, comentar as três linhas relacionadas a SSL.
-Reiniciar Nginx para aplicar alterações:
+apt install -y nginx
+cp /opt/netbox/contrib/nginx.conf /etc/nginx/sites-available/netbox - instalar servidor web
 
-bash
-Copy code
-systemctl restart nginx
+vi /etc/nginx/sites-available/netbox - entrar dentro do arquivo netbox.conf para informar ip da maquina e caso não tiver certificado comentar a 3 linhas do ssl
+
+systemctl restart nginx - para subir as configurações alteradas
+
 Com essas instruções, você terá o NetBox instalado e configurado no seu ambiente Ubuntu 22.04 LTS. Certifique-se de ajustar conforme necessário, especialmente versões e caminhos, e acompanhe possíveis atualizações do NetBox e suas dependências.
