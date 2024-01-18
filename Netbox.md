@@ -10,7 +10,6 @@ VCpu: 1 (1core)
 Python: >= 3.8
 PostgreSQL: >= 10
 Redis: >= 4.0
-Atualizar a máquina:
 
 # atualizar softwares da maquina
 apt update
