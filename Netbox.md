@@ -10,10 +10,10 @@ PostgreSQL: >= 10
 Redis: >= 4.0
 
 # atualizar softwares da maquina
-apt update
+sudo apt update
 
 # instalar o postgres
-apt install -y postgresql
+sudo apt install -y postgresql
 # verificar a versão do postgres
 psql -V
 
@@ -27,7 +27,7 @@ GRANT CREATE ON SCHEMA public TO netbox;
 \q
 
 # instalação do Redis
-apt install -y redis-server
+sudo apt install -y redis-server
 # tem que retornar como "PONG" para ter certeza que serviço esta ok
 redis-cli ping
 
@@ -43,8 +43,8 @@ ln -s /opt/netbox
 ls -l /opt | grep netbox
 
 # criar usuário netbox
-adduser --system -group netbox
-chown --recursive netbox /opt/netbox/netbox/media/
+sudo adduser --system -group netbox
+sudo chown --recursive netbox /opt/netbox/netbox/media/
 sudo chown --recursive netbox /opt/netbox/netbox/reports/
 sudo chown --recursive netbox /opt/netbox/netbox/scripts/
 
@@ -89,7 +89,7 @@ systemctl enable netbox netbox-rq
 systemctl status netbox
 
 # instalar servidor web
-apt install -y nginx
+sudo apt install -y nginx
 cp /opt/netbox/contrib/nginx.conf /etc/nginx/sites-available/netbox
 # entrar dentro do arquivo netbox.conf para informar ip da maquina e caso não tiver certificado comentar a 3 linhas do ssl
 vi /etc/nginx/sites-available/netbox
