@@ -45,6 +45,8 @@ ls -l /opt | grep netbox
 # criar usuário netbox
 adduser --system -group netbox
 chown --recursive netbox /opt/netbox/netbox/media/
+sudo chown --recursive netbox /opt/netbox/netbox/reports/
+sudo chown --recursive netbox /opt/netbox/netbox/scripts/
 
 # copiar pasta do arquivo principal
 cd /opt/netbox/netbox/netbox/
