@@ -13,7 +13,6 @@ Atualizar a máquina:
 apt update - atualizar softwares da maquina
 
 apt install -y postgresql - instalar o postgres
-
 psql -V - verificar a versão do postgres
 
 sudo -u postgres psql - criação da data base
@@ -25,11 +24,9 @@ ALTER DATABASE netbox OWNER TO netbox;
 GRANT CREATE ON SCHEMA public TO netbox;
 
 apt install -y redis-server - instalar o redis
-
 redis-cli ping - tem que retornar como "PONG" para ter certeza que serviço esta ok
 
 sudo apt install -y python3 python3-pip python3-venv python3-dev build-essential libxml2-dev libxslt1-dev libffi-dev libpq-dev libssl-dev zlib1g-dev - instalar o python
-
 pip3 install --upgrade pip - rodar após a instalação do python com seus pacotes
 
 wget https://github.com/netbox-community/netbox/archive/refs/tags/vx.x.x.tar.gz
@@ -58,7 +55,6 @@ cd /opt/netbox/netbox
 python3 manage.py createsuperuser - criar usuario admin para netbox
 
 python3 manage.py runserver 0.0.0.0:8000 --insecure - verificar se esta funcional dentro do ambiente python (informar o ip da maquina seguido da porta do firewall)
-
 verificar se a porta 8000 ou qualquer outra que informar esta habilitada no firewall
 
 comando "deactivate" sai do interface python
@@ -73,9 +69,7 @@ systemctl status netbox - ativar serviços netbox
 
 apt install -y nginx
 cp /opt/netbox/contrib/nginx.conf /etc/nginx/sites-available/netbox - instalar servidor web
-
 vi /etc/nginx/sites-available/netbox - entrar dentro do arquivo netbox.conf para informar ip da maquina e caso não tiver certificado comentar a 3 linhas do ssl
-
 systemctl restart nginx - para subir as configurações alteradas
 
 Com essas instruções, você terá o NetBox instalado e configurado no seu ambiente Ubuntu 22.04 LTS. Certifique-se de ajustar conforme necessário, especialmente versões e caminhos, e acompanhe possíveis atualizações do NetBox e suas dependências.
