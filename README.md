@@ -1,115 +1,96 @@
-# NetBox Installation Guide for Ubuntu 22.04 LTS
+Guia de Instalação do NetBox no Ubuntu 22.04 LTS
 
-Before starting, it's highly recommended to create a machine snapshot for easy rollbacks after updates.
+Antes de começar, é altamente recomendável realizar um snapshot da máquina para facilitar possíveis rollbacks após atualizações.
 
-Minimum Requirements:
+Requisitos Mínimos:
 
-Memory: 4GB (minimum)
+Memória: 4GB (mínimo)
 Python: >= 3.8
 PostgreSQL: >= 10
 Redis: >= 4.0
-Update the machine:
+Atualizar a máquina:
 
-Copy code
 sudo apt update
-Install PostgreSQL:
+Instalar PostgreSQL:
 
-Copy code
 sudo apt install -y postgresql
-Check PostgreSQL version:
+Verificar versão do PostgreSQL:
 
-Copy code
 psql -V
-Create PostgreSQL database:
+Criar database PostgreSQL:
 
-Copy code
 sudo -u postgres psql
-Install Redis:
+Instalar Redis:
 
-Copy code
 sudo apt install -y redis-server
-Check Redis status:
+Verificar status do Redis:
 
-Copy code
 redis-cli ping
-Install essential Python packages:
+Instalar pacotes essenciais do Python:
 
-Copy code
 sudo apt install -y python3 python3-pip python3-venv python3-dev build-essential libxml2-dev libxslt1-dev libffi-dev libpq-dev libssl-dev zlib1g-dev
-Update Pip:
+Atualizar o Pip:
 
-Copy code
 pip3 install --upgrade pip
-Download and configure NetBox:
+Baixar e configurar NetBox:
 
-Copy code
-wget https://github.com/netbox-community/netbox/archive/refs/tags/vx.x.x.tar.gz
-tar -xzf vx.x.x.tar.gz -C /opt
+wget https://github.com/netbox-community/netbox/archive/refs/tags/v3.6.7.tar.gz
+tar -xzf v3.6.7.tar.gz -C /opt
 ln -s /opt/netbox
-Create NetBox user:
+Criar usuário NetBox:
 
-Copy code
 sudo adduser --system --group netbox
 sudo chown --recursive netbox /opt/netbox/netbox/media/
-Configure NetBox:
+Configurar NetBox:
 
-Copy code
 cd /opt/netbox/netbox/netbox/
 cp configuration_example.py configuration.py
-Edit configuration.py:
+Editar configuration.py:
 
-In "ALLOWED_HOSTS =", provide the IP or VM name.
-Generate secret key:
+Em "ALLOWED_HOSTS =", informar o IP ou nome da VM.
+Gerar chave secreta:
 
-Copy code
 python3 ../generate_secret_key.py
-Install Python virtual environment:
+Instalar ambiente virtual do Python:
 
-Copy code
 echo napalm >> /opt/netbox/local_requirements.txt
-Run upgrade script:
+Executar script de upgrade:
 
-Copy code
 cd /opt/netbox
 ./upgrade.sh
-Activate Python virtual environment:
+Ativar ambiente virtual do Python:
 
-Copy code
 source /opt/netbox/venv/bin/activate
-Create superuser:
+Criar superusuário:
 
-Copy code
 cd /opt/netbox/netbox
 python3 manage.py createsuperuser
-Run development server:
+Executar servidor de desenvolvimento:
 
-Copy code
 python3 manage.py runserver 0.0.0.0:8000 --insecure
-Configure firewall:
+Configurar firewall:
 
-Ensure that port 8000 (or specified) is enabled.
-Deactivate virtual environment:
+Verificar se a porta 8000 (ou outra especificada) está habilitada.
+Desativar ambiente virtual:
 
-Copy code
 deactivate
-Configure Gunicorn and system services:
+Configurar Gunicorn e serviços do sistema:
 
-Copy code
 cp /opt/netbox/contrib/gunicorn.py /opt/netbox/gunicorn.py
 cp -v /opt/netbox/contrib/*.service /etc/systemd/system/
 systemctl daemon-reload
 systemctl start netbox netbox-rq
 systemctl enable netbox netbox-rq
 systemctl status netbox
-Install and configure Nginx:
+Instalar e configurar Nginx:
 
-Copy code
 sudo apt install -y nginx
 cp /opt/netbox/contrib/nginx.conf /etc/nginx/sites-available/netbox
 vi /etc/nginx/sites-available/netbox
-Inside the netbox file, provide the machine's IP. If no SSL certificate is available, comment the three SSL-related lines.
-Restart Nginx to apply changes:
+Dentro do arquivo netbox, informar o IP da máquina. Se não houver certificado SSL, comentar as três linhas relacionadas a SSL.
+Reiniciar Nginx para aplicar alterações:
 
+bash
 Copy code
 systemctl restart nginx
-With these instructions, you'll have NetBox installed and configured on your Ubuntu 22.04 LTS environment. Be sure to adjust as necessary, especially versions and paths, and keep an eye on potential updates for NetBox and its dependencies.
+Com essas instruções, você terá o NetBox instalado e configurado no seu ambiente Ubuntu 22.04 LTS. Certifique-se de ajustar conforme necessário, especialmente versões e caminhos, e acompanhe possíveis atualizações do NetBox e suas dependências.
