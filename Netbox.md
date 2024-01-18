@@ -52,7 +52,7 @@ cd /opt/netbox/netbox/netbox/
 cp configuration_example.py configuration.py
 
 # informar o IP ou nome da VM (para testes pode inserir '*')
-entrar dentro do arquivo configuration.py em "ALLOWED_HOSTS ="
+# entrar dentro do arquivo configuration.py em "ALLOWED_HOSTS ="
 
 # gerar chave nesse comando para colar detro do arquivo configuration.py
 python3 ../generate_secret_key.py
