@@ -19,11 +19,17 @@ psql -V
 
 # criação da data base
 sudo -u postgres psql
+
 CREATE DATABASE netbox;
+
 CREATE USER netbox WITH PASSWORD 'J5brHrAXFLQSif0K';
+
 ALTER DATABASE netbox OWNER TO netbox;
+
 \connect netbox;
+
 GRANT CREATE ON SCHEMA public TO netbox;
+
 \q
 
 # instalação do Redis
