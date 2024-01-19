@@ -74,6 +74,7 @@ cd /opt/netbox
 
 # criar usuario para netbox
 cd /opt/netbox/netbox
+apt install python3-pip -y
 python3 manage.py createsuperuser
 
 # verificar se esta funcional dentro do ambiente python (informar o ip da maquina seguido da porta do firewall)
