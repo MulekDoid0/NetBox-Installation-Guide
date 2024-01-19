@@ -64,6 +64,8 @@ cd /opt/netbox
 ./upgrade.sh
 
 # ambiente virtual do python
+sudo apt install python3.8-venv -y
+python3 -m venv venv
 source /opt/netbox/venv/bin/activate
 # rodar após a instalação do python com seus pacotes
 pip3 install --upgrade pip
