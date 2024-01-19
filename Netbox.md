@@ -59,16 +59,18 @@ python3 /opt/netbox/netbox/generate_secret_key.py
 # cria o ambiente virtual do python
 echo napalm >> /opt/netbox/local_requirements.txt
 
-# script para fazer o upgrade
-cd /opt/netbox
-./upgrade.sh
-
 # ambiente virtual do python
 sudo apt install python3.8-venv -y
 python3 -m venv venv
 source /opt/netbox/venv/bin/activate
 # rodar após a instalação do python com seus pacotes
 pip3 install --upgrade pip
+# comando "deactivate" sai do interface python
+deactivate
+
+# script para fazer o upgrade
+cd /opt/netbox
+./upgrade.sh
 
 # criar usuario para netbox
 cd /opt/netbox/netbox
@@ -77,8 +79,6 @@ python3 manage.py createsuperuser
 # verificar se esta funcional dentro do ambiente python (informar o ip da maquina seguido da porta do firewall)
 python3 manage.py runserver 0.0.0.0:8000 --insecure
 # verificar se a porta 8000 ou qualquer outra que informar esta habilitada no firewall
-
-# comando "deactivate" sai do interface python
 
 # arquivos de serviço do gunicorn
 cp /opt/netbox/contrib/gunicorn.py /opt/netbox/gunicorn.py
