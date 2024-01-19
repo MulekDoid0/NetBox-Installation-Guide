@@ -33,8 +33,6 @@ redis-cli ping
 
 # instalar o python
 sudo apt install -y python3 python3-pip python3-venv python3-dev build-essential libxml2-dev libxslt1-dev libffi-dev libpq-dev libssl-dev zlib1g-dev
-# rodar após a instalação do python com seus pacotes
-pip3 install --upgrade pip
 
 # Obs: instalar a versão mais atualizada conforme site da netbox, pois pode mudar a versão com o tempo
 wget https://github.com/netbox-community/netbox/archive/refs/tags/vx.x.x.tar.gz
@@ -56,7 +54,7 @@ cp configuration_example.py configuration.py
 # entrar dentro do arquivo configuration.py em "ALLOWED_HOSTS"
 
 # gerar chave nesse comando para colar detro do arquivo configuration.py
-python3 ../generate_secret_key.py
+python3 /opt/netbox/netbox/generate_secret_key.py
 
 # cria o ambiente virtual do python
 echo napalm >> /opt/netbox/local_requirements.txt
@@ -67,6 +65,8 @@ cd /opt/netbox
 
 # ambiente virtual do python
 source /opt/netbox/venv/bin/activate
+# rodar após a instalação do python com seus pacotes
+pip3 install --upgrade pip
 
 # criar usuario para netbox
 cd /opt/netbox/netbox
