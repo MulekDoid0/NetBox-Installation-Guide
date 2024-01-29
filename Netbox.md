@@ -42,14 +42,14 @@ redis-cli ping
 # instalar o python
 sudo apt install -y python3 python3-pip python3-venv python3-dev build-essential libxml2-dev libxslt1-dev libffi-dev libpq-dev libssl-dev zlib1g-dev
 
+python3 -V
+
 # Obs: instalar a versão mais atualizada conforme site da netbox, pois pode mudar a versão com o tempo
 wget https://github.com/netbox-community/netbox/archive/refs/tags/vx.x.x.tar.gz
 
 tar -xzf vx.x.x.tar.gz -C /opt
 
-ln -s /opt/netbox
-
-ls -l /opt | grep netbox
+ln -s /opt/netbox-X.Y.Z/ /opt/netbox
 
 # criar usuário netbox
 adduser --system -group netbox
