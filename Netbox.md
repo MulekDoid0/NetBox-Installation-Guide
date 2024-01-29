@@ -100,6 +100,8 @@ pip3 install --upgrade pip
 
 apt install python3-pip -y
 
+pip install django
+
 # comando "deactivate" sai do interface python
 
 deactivate
