@@ -106,7 +106,9 @@ deactivate
 
 # script para fazer o upgrade
 
-cd /opt/netbox ./upgrade.sh
+cd /opt/netbox
+
+./upgrade.sh
 
 # criar usuario para netbox
 
